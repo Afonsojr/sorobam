@@ -1,36 +1,32 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Soroban
 
-## Getting Started
+Ábaco japonês interativo, com página de treino de exercícios. Projeto construído com [Next.js](https://nextjs.org) (App Router) e [shadcn/ui](https://ui.shadcn.com/).
 
-First, run the development server:
+## Funcionalidades
+
+- **Ábaco interativo** (`/`): manipule as contas clicando para somar e subtrair; a conta de cima vale 5 e as de baixo valem 1.
+- **Treino** (`/treino`): gera exercícios de contas com o ábaco e acompanha o progresso.
+- UI em pt-BR, componentes com Tailwind CSS v4 e Radix UI.
+
+## Scripts
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+bun dev       # servidor de desenvolvimento
+bun build     # build de produção
+bun start     # serve o build
+bun lint      # executa o eslint
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Como usar o ábaco
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- Clique numa conta de baixo para levantá-la junto com as anteriores.
+- Clique na faixa vazia abaixo da barra para zerar a coluna.
+- A conta de cima alterna o valor 5.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Estrutura
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+app/              # páginas (início e treino)
+components/       # componentes do ábaco e UI
+lib/              # lógica de exercícios e do soroban
+```
