@@ -1,17 +1,10 @@
 "use client";
 
 import { useCallback, useMemo, useState } from "react";
+import { ArrowRight, Brain, Calculator, CheckCircle2, XCircle } from "lucide-react";
 import { Soroban } from "@/components/soroban";
 import { TutorialDialog } from "@/components/treino/tutorial-dialog";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -95,48 +88,74 @@ export default function Treino() {
   );
 
   return (
-    <main className="flex flex-1 flex-col items-center gap-6 px-4 py-10">
-      <header className="text-center">
-        <h1 className="text-3xl font-bold tracking-tight">Treino</h1>
-        <p className="mt-1 text-muted-foreground">
-          Escolha um modo e resolva a operação.
-        </p>
+    <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col px-4 py-8 sm:px-6 sm:py-10">
+      <header className="mb-7 flex items-end justify-between gap-5">
+        <div>
+          <h1 className="text-3xl font-semibold tracking-[-0.03em] sm:text-4xl">Treino guiado</h1>
+          <p className="mt-2 text-muted-foreground">Pratique no seu ritmo e acompanhe seus acertos.</p>
+        </div>
+        <div className="shrink-0 border-l pl-5 text-right">
+          <p className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">Acertos</p>
+          <p className="mt-1 font-mono text-2xl font-medium tabular-nums">
+            {score.correct}<span className="text-muted-foreground">/{score.total}</span>
+          </p>
+        </div>
       </header>
 
-      <Card className="w-full max-w-3xl">
-        <CardHeader className="flex flex-row items-center justify-between gap-4">
+      <section className="workspace-panel flex flex-1 flex-col" aria-label="Exercício atual">
+        <div className="grid gap-5 border-b px-4 py-4 sm:px-6 lg:grid-cols-[1fr_auto] lg:items-end">
           <div>
-            <CardTitle className="font-mono text-4xl tabular-nums">
+            <p className="mb-2 text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">Modo</p>
+            <div className="inline-flex rounded-lg border bg-muted/50 p-1" role="group" aria-label="Modo de treino">
+              {MODES.map((modeOption) => {
+                const active = modeOption.id === mode;
+                const Icon = modeOption.id === "soroban" ? Calculator : Brain;
+                return (
+                  <Button
+                    key={modeOption.id}
+                    variant={active ? "default" : "ghost"}
+                    className="h-9 px-3"
+                    aria-pressed={active}
+                    onClick={() => changeMode(modeOption.id)}
+                  >
+                    <Icon aria-hidden="true" />
+                    {modeOption.label}
+                  </Button>
+                );
+              })}
+            </div>
+          </div>
+          <div>
+            <p className="mb-2 text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground lg:text-right">Dificuldade</p>
+            <div className="inline-flex rounded-lg border bg-muted/50 p-1" role="group" aria-label="Dificuldade">
+              {DIFFICULTIES.map((difficultyOption, index) => (
+                <Button
+                  key={difficultyOption.label}
+                  variant={index === difficultyIndex ? "default" : "ghost"}
+                  className="h-9 px-3"
+                  aria-pressed={index === difficultyIndex}
+                  onClick={() => changeDifficulty(index)}
+                >
+                  {difficultyOption.label}
+                </Button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-workspace flex flex-1 flex-col px-4 py-6 sm:px-8 sm:py-8">
+          <div className="text-center">
+            <p className="text-sm text-muted-foreground">{modeMeta.hint}</p>
+            <p className="mt-3 font-mono text-4xl font-medium tracking-[-0.03em] tabular-nums sm:text-5xl">
               {operation}
-            </CardTitle>
-            <CardDescription>{modeMeta.hint}</CardDescription>
-          </div>
-          <Badge
-            variant={score.total > 0 && score.correct === score.total ? "default" : "secondary"}
-            className="tabular-nums"
-          >
-            {score.correct}/{score.total}
-          </Badge>
-        </CardHeader>
-
-        <CardContent className="flex flex-col gap-4">
-          <div className="flex items-center gap-2">
-            {MODES.map((m) => (
-              <Button
-                key={m.id}
-                variant={m.id === mode ? "default" : "outline"}
-                size="sm"
-                onClick={() => changeMode(m.id)}
-              >
-                {m.label}
-              </Button>
-            ))}
+            </p>
           </div>
 
+          <div className="mx-auto mt-7 flex w-full max-w-3xl flex-1 flex-col justify-center">
           {mode === "mental" ? (
-            <div className="flex flex-col gap-2">
+              <div className="mx-auto w-full max-w-md py-10">
               <Label htmlFor="answer">Resposta</Label>
-              <div className="flex gap-2">
+                <div className="mt-2 flex flex-col gap-2 sm:flex-row">
                 <Input
                   id="answer"
                   inputMode="numeric"
@@ -149,29 +168,30 @@ export default function Treino() {
                   onKeyDown={(e) =>
                     e.key === "Enter" && status !== "correct" && check()
                   }
-                  className={cn(
-                    "text-lg font-mono",
+                    aria-invalid={status === "wrong"}
+                    className={cn(
+                    "h-11 font-mono text-lg sm:text-lg",
                     status === "correct" && "border-emerald-500",
                     status === "wrong" && "border-red-500",
                   )}
                   disabled={status === "correct"}
                 />
-                <Button onClick={check} disabled={status === "correct"}>
+                  <Button className="h-11 px-5" onClick={check} disabled={status === "correct" || answer.trim() === ""}>
                   Conferir
                 </Button>
               </div>
             </div>
           ) : (
-            <div className="flex flex-col items-center gap-3">
+              <div className="flex flex-col items-center gap-5">
               <Soroban
                 key={frame}
                 columns={6}
                 onChange={setAbacusValue}
                 showValue
-                className="max-w-2xl"
+                  className="max-w-md"
               />
               <Button
-                className="w-full max-w-xs"
+                  className="h-10 w-full max-w-xs"
                 onClick={check}
                 disabled={status === "correct"}
               >
@@ -181,39 +201,28 @@ export default function Treino() {
           )}
 
           {status === "correct" && (
-            <div className="rounded-md bg-emerald-50 px-3 py-2 text-sm font-medium text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300">
-              Correto! A resposta era {exercise.result}.
+              <div role="status" className="mt-5 flex items-center justify-center gap-2 rounded-md bg-emerald-100 px-4 py-3 text-sm font-medium text-emerald-800">
+                <CheckCircle2 className="size-4" aria-hidden="true" />
+                Correto. A resposta é {exercise.result}.
             </div>
           )}
           {status === "wrong" && (
-            <div className="rounded-md bg-red-50 px-3 py-2 text-sm font-medium text-red-700 dark:bg-red-950 dark:text-red-300">
-              Errou. A resposta correta é {exercise.result}.
+              <div role="alert" className="mt-5 flex items-center justify-center gap-2 rounded-md bg-red-100 px-4 py-3 text-sm font-medium text-red-800">
+                <XCircle className="size-4" aria-hidden="true" />
+                Ainda não. A resposta correta é {exercise.result}.
             </div>
           )}
-
-          <div className="flex flex-wrap items-center justify-between gap-3 border-t pt-4">
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="text-sm text-muted-foreground">Dificuldade:</span>
-              {DIFFICULTIES.map((d, i) => (
-                <Button
-                  key={d.label}
-                  variant={i === difficultyIndex ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => changeDifficulty(i)}
-                >
-                  {d.label}
-                </Button>
-              ))}
-            </div>
-            <div className="flex items-center gap-2">
-              <TutorialDialog />
-              <Button size="sm" onClick={() => newExercise()}>
-                Próxima
-              </Button>
-            </div>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+
+        <div className="flex flex-wrap items-center justify-between gap-3 border-t px-4 py-4 sm:px-6">
+              <TutorialDialog />
+          <Button className="h-9 px-4" onClick={() => newExercise()}>
+                Próxima operação
+            <ArrowRight aria-hidden="true" />
+              </Button>
+        </div>
+      </section>
     </main>
   );
 }

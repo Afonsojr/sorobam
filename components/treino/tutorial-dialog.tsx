@@ -1,5 +1,6 @@
 "use client";
 
+import { BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -42,10 +43,11 @@ export function TutorialDialog() {
     <Dialog>
       <DialogTrigger asChild>
         <Button variant="outline" size="sm">
-          Como iniciar o cálculo mental
+          <BookOpen aria-hidden="true" />
+          Guia de cálculo mental
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-h-[80vh] overflow-y-auto">
+      <DialogContent className="max-h-[80vh] overflow-y-auto sm:max-w-xl">
         <DialogHeader>
           <DialogTitle>Iniciando no cálculo mental do soroban</DialogTitle>
           <DialogDescription>
@@ -53,10 +55,10 @@ export function TutorialDialog() {
             passos na ordem — cada um constrói a base do próximo.
           </DialogDescription>
         </DialogHeader>
-        <ol className="flex flex-col gap-4">
+        <ol className="flex flex-col gap-5 border-t pt-4">
           {STEPS.map((step, i) => (
             <li key={step.title} className="flex gap-3">
-              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground">
+              <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground">
                 {i + 1}
               </span>
               <div>
