@@ -25,7 +25,6 @@ const BAR_H = 8;
 const COL_W = 64;
 const BEAD_W = 46;
 const BEAD_H = 26;
-const BEAD_R = 7;
 const UPPER_REST_Y = 10;
 const UPPER_ACTIVE_Y = BAR_Y - BEAD_H;
 const LOWER_ACTIVE_Y = BAR_Y;
@@ -43,12 +42,16 @@ const ROD_BOTTOM = PANEL_BOTTOM;
 
 function beadShape(): string {
   return [
-    `M ${BEAD_W / 2} ${BEAD_R}`,
-    `Q ${BEAD_W - BEAD_R} ${BEAD_R}, ${BEAD_W - BEAD_R} ${BEAD_H / 2}`,
-    `Q ${BEAD_W - BEAD_R} ${BEAD_H - BEAD_R}, ${BEAD_W / 2} ${BEAD_H - BEAD_R}`,
-    `Q ${BEAD_R} ${BEAD_H - BEAD_R}, ${BEAD_R} ${BEAD_H / 2}`,
-    `Q ${BEAD_R} ${BEAD_R}, ${BEAD_W / 2} ${BEAD_R}`,
+    `M ${BEAD_W / 2 - 4} 2`,
+    `L ${BEAD_W / 2 + 4} 2`,
+    `C ${BEAD_W / 2 + 10} 3, ${BEAD_W - 5} 8, ${BEAD_W - 2} ${BEAD_H / 2}`,
+    `C ${BEAD_W - 5} ${BEAD_H - 8}, ${BEAD_W / 2 + 10} ${BEAD_H - 3}, ${BEAD_W / 2 + 4} ${BEAD_H - 2}`,
+    `L ${BEAD_W / 2 - 4} ${BEAD_H - 2}`,
+    `C ${BEAD_W / 2 - 10} ${BEAD_H - 3}, 5 ${BEAD_H - 8}, 2 ${BEAD_H / 2}`,
+    `C 5 8, ${BEAD_W / 2 - 10} 3, ${BEAD_W / 2 - 4} 2`,
     "Z",
+    `M 2 ${BEAD_H / 2}`,
+    `L ${BEAD_W - 2} ${BEAD_H / 2}`,
   ].join(" ");
 }
 
@@ -116,12 +119,16 @@ export function Soroban({
       >
         <defs>
           <linearGradient id={`${gradId}-upper`} x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#f97b72" />
-            <stop offset="100%" stopColor="#d9433b" />
+            <stop offset="0%" stopColor="#e96955" />
+            <stop offset="49.5%" stopColor="#e96955" />
+            <stop offset="50%" stopColor="#b92f27" />
+            <stop offset="100%" stopColor="#b92f27" />
           </linearGradient>
           <linearGradient id={`${gradId}-lower`} x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#7484fd" />
-            <stop offset="100%" stopColor="#3d50d6" />
+            <stop offset="0%" stopColor="#3f8790" />
+            <stop offset="49.5%" stopColor="#3f8790" />
+            <stop offset="50%" stopColor="#205c67" />
+            <stop offset="100%" stopColor="#205c67" />
           </linearGradient>
         </defs>
 
@@ -131,8 +138,8 @@ export function Soroban({
           width={width - 4}
           height={FRAME_BOTTOM - 4}
           rx={12}
-          className="fill-[#f3e7d0] stroke-slate-700 dark:fill-slate-800 dark:stroke-slate-950"
-          strokeWidth={2}
+          className="fill-[#292b29] stroke-[#161716]"
+          strokeWidth={3}
         />
         <rect
           x={8}
@@ -140,7 +147,7 @@ export function Soroban({
           width={width - 16}
           height={PANEL_BOTTOM - 16}
           rx={6}
-          className="fill-[#faf6ee] dark:fill-slate-900"
+          className="fill-[#f7f1e4]"
         />
         <rect
           x={8}
@@ -148,7 +155,7 @@ export function Soroban({
           width={width - 16}
           height={BAR_H}
           rx={2}
-          className="fill-[#eab308]"
+          className="fill-[#b9372d]"
         />
 
         {Array.from({ length: columns }, (_, i) => (
@@ -158,7 +165,7 @@ export function Soroban({
             y1={ROD_TOP}
             x2={COL_CX(i)}
             y2={ROD_BOTTOM}
-            className="stroke-slate-900/25 dark:stroke-white/20"
+            className="stroke-[#303532]/25"
             strokeWidth={1.5}
           />
         ))}
@@ -217,14 +224,14 @@ export function Soroban({
                 x={cx}
                 y={LABEL_Y}
                 textAnchor="middle"
-                className="fill-slate-700 dark:fill-slate-300"
+                className="fill-[#4b504c]"
                 fontSize={11}
                 fontWeight={500}
               >
                 {COLUMN_LABELS[col] ?? `${col}`}
               </text>
               {col === 0 && (
-                <circle cx={cx} cy={UNIT_DOT_Y} r={2.5} className="fill-slate-900 dark:fill-white" />
+                <circle cx={cx} cy={UNIT_DOT_Y} r={2.5} className="fill-[#b9372d]" />
               )}
             </g>
           );
