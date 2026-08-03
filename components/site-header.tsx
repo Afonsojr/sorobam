@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Calculator, Dumbbell } from "lucide-react";
+import { Calculator, Dumbbell, GraduationCap } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const NAV_ITEMS = [
   { href: "/", label: "Ábaco", icon: Calculator },
+  { href: "/aprender", label: "Aprender", icon: GraduationCap },
   { href: "/treino", label: "Treino", icon: Dumbbell },
 ];
 
